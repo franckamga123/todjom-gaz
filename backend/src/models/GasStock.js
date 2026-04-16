@@ -1,11 +1,11 @@
 // ============================================
-// TODJOM GAZ - Modèle Stock (Inventaire Distributeur)
+// TODJOM GAZ - Modèle GasStock (Inventaire Distributeur)
 // ============================================
 
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Stock = sequelize.define('Stock', {
+    const GasStock = sequelize.define('GasStock', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -45,5 +45,5 @@ module.exports = (sequelize) => {
         ]
     });
 
-    return Stock;
+    return GasStock;
 };

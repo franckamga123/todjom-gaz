@@ -2,7 +2,7 @@
 // TODJOM GAZ - Contrôleur Admin
 // ============================================
 
-const { User, Supplier, Distributor, Order, Payment, Review, Dispute, Notification, SystemLog, Setting, Product, Emergency, Vehicle, PromoCode, Banner, Withdrawal, SafetyCenter, sequelize } = require('../models');
+const { User, Supplier, Distributor, Order, Payment, Review, Dispute, Notification, SystemLog, Setting, Product, Emergency, Vehicle, PromoCode, Banner, Withdrawal, SafetyCenter, GasStock, sequelize } = require('../models');
 const { AppError } = require('../middleware/errorHandler');
 const { logAction } = require('../services/logService');
 const { sendSMS, sendWhatsApp } = require('../services/smsService');

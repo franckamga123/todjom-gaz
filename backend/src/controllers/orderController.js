@@ -2,7 +2,7 @@
 // TODJOM GAZ - Contrôleur Commandes
 // ============================================
 
-const { Order, Product, Supplier, Distributor, User, Payment, OrderStatusHistory, Notification, Brand, sequelize, Stock } = require('../models');
+const { Order, Product, Supplier, Distributor, User, Payment, OrderStatusHistory, Notification, Brand, sequelize, GasStock } = require('../models');
 const { AppError } = require('../middleware/errorHandler');
 const { logAction } = require('../services/logService');
 const { sendOrderNotification } = require('../services/smsService');
@@ -102,7 +102,7 @@ exports.searchDistributor = async (req, res, next) => {
         const productIds = products.map(p => p.id);
 
         // 2. Chercher les distributeurs qui ont ces produits en stock
-        const stocks = await Stock.findAll({
+        const stocks = await GasStock.findAll({
             where: {
                 product_id: { [Op.in]: productIds },
                 quantity: { [Op.gt]: 0 }

@@ -1,4 +1,4 @@
-const { User, Supplier, Withdrawal, Order, Stock, Product, Distributor, sequelize } = require('../models');
+const { User, Supplier, Withdrawal, Order, GasStock, Product, Distributor, sequelize } = require('../models');
 const { AppError } = require('../middleware/errorHandler');
 const { logAction } = require('../services/logService');
 const { Op } = require('sequelize');
@@ -99,7 +99,7 @@ exports.getAffiliatedDistributors = async (req, res, next) => {
                     attributes: ['id', 'full_name', 'phone', 'address', 'latitude', 'longitude']
                 },
                 {
-                    model: Stock, as: 'inventory',
+                    model: GasStock, as: 'inventory',
                     include: [{
                         model: Product, as: 'product',
                         where: { supplier_id: supplier.id } // Uniquement les produits de ce fournisseur

@@ -58,7 +58,7 @@ const PromoCode = require('./PromoCode')(sequelize);
 const Banner = require('./Banner')(sequelize);
 const Withdrawal = require('./Withdrawal')(sequelize);
 const SafetyCenter = require('./SafetyCenter')(sequelize);
-const Stock = require('./Stock')(sequelize);
+const GasStock = require('./GasStock')(sequelize);
 const DeliveryProfile = require('./DeliveryProfile')(sequelize);
 const Brand = require('./Brand')(sequelize);
 const AppConfig = require('./AppConfig')(sequelize);
@@ -112,14 +112,11 @@ Distributor.belongsToMany(Supplier, {
 
 // Supplier -> Products (1:N)
 Supplier.hasMany(Product, { foreignKey: 'supplier_id', as: 'products' });
-Product.belongsTo(Supplier, { foreignKey: 'supplier_id', as: 'supplier' });
+Distributor.hasMany(GasStock, { foreignKey: 'distributor_id', as: 'inventory' });
+GasStock.belongsTo(Distributor, { foreignKey: 'distributor_id', as: 'distributor' });
 
-// Distributor <-> Stock <-> Product
-Distributor.hasMany(Stock, { foreignKey: 'distributor_id', as: 'inventory' });
-Stock.belongsTo(Distributor, { foreignKey: 'distributor_id', as: 'distributor' });
-
-Product.hasMany(Stock, { foreignKey: 'product_id', as: 'stocks' });
-Stock.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
+Product.hasMany(GasStock, { foreignKey: 'product_id', as: 'stocks' });
+GasStock.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
 
 // Orders
 User.hasMany(Order, { foreignKey: 'client_id', as: 'clientOrders' });
@@ -197,7 +194,7 @@ const db = {
     Banner,
     Withdrawal,
     SafetyCenter,
-    Stock,
+    GasStock,
     DeliveryProfile,
     Brand,
     AppConfig
