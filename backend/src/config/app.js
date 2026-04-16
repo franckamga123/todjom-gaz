@@ -91,15 +91,7 @@ module.exports = {
 
     // CORS
     cors: {
-        origin: process.env.NODE_ENV === 'production'
-            ? ['https://admin.todjomgaz.com', 'https://fournisseur.todjomgaz.com', 'https://app.todjomgaz.com', 'https://portal.todjomgaz.com']
-            : [
-                'http://localhost:5000', 'http://127.0.0.1:5000',
-                'http://localhost:5100', 'http://localhost:5173', 'http://localhost:5300',
-                'http://127.0.0.1:5100', 'http://127.0.0.1:5173', 'http://127.0.0.1:5300',
-                'http://192.168.1.218:5100', 'http://192.168.1.218:5173', 'http://192.168.1.218:5300',
-                'http://192.168.1.218:3000'
-              ],
+        origin: true,
         credentials: true
     }
 };

@@ -120,8 +120,8 @@ const startServer = async () => {
         await db.sequelize.authenticate();
         console.log('✅ Connexion MySQL établie avec succès');
 
-        // Synchroniser les modèles (en dev uniquement - en prod utiliser les migrations)
-        if (config.nodeEnv === 'development') {
+        // Synchroniser les modèles (Toujours synchroniser au premier lancement en prod pour créer les tables)
+        if (config.nodeEnv === 'development' || process.env.DB_SYNC === 'true') {
             await db.sequelize.sync({ alter: true });
             console.log('✅ Modèles synchronisés');
         }
