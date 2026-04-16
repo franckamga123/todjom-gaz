@@ -1,4 +1,4 @@
-const { sequelize, User, Supplier, Product, Distributor, Stock, AppConfig, Brand } = require('../models');
+const { sequelize, User, Supplier, Product, Distributor, GasStock, AppConfig, Brand } = require('../models');
 
 const seed = async () => {
   try {
@@ -56,8 +56,8 @@ const seed = async () => {
     const prod3 = await Product.create({ brand_id: nigerGaz.id, weight_kg: 3, price_cfa: 2000, is_available: true });
     const prod6 = await Product.create({ brand_id: nigerGaz.id, weight_kg: 6, price_cfa: 3500, is_available: true });
 
-    await Stock.create({ distributor_id: distProfile.id, product_id: prod3.id, quantity: 50 });
-    await Stock.create({ distributor_id: distProfile.id, product_id: prod6.id, quantity: 30 });
+    await GasStock.create({ distributor_id: distProfile.id, product_id: prod3.id, quantity: 50 });
+    await GasStock.create({ distributor_id: distProfile.id, product_id: prod6.id, quantity: 30 });
 
     console.log('🌱 Seed terminé avec succès !');
     process.exit(0);

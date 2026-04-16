@@ -4,8 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   final Dio _dio = Dio();
   // IP locale pour le test (à changer par l'IP du serveur en prod)
-  // IMPORTANT: Remplacez l'IP ci-dessous par l'adresse IPv4 de votre serveur/PC actuel
-  static const String baseUrl = 'http://192.168.1.218:3000/api'; 
+  static const String baseUrl = 'https://todjom-gaz-backend.onrender.com/api'; 
 
   ApiService() {
     _dio.options.baseUrl = baseUrl;
