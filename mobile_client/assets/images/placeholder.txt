@@ -1,0 +1,2 @@
+# Placeholder for assets/images
+# This file ensures the directory is not empty and the build doesn't fail if it's declared in pubspec.yaml

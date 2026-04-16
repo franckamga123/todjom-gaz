@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #ff8c00;
+  --bg: #050507;
+}
+
+body {
+  @apply bg-[#050507] text-white antialiased font-outfit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stitch-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stitch-input {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  @apply transition-all duration-300;
+}
+
+.stitch-input:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--brand);
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.15);
+}
+
+.brand-gradient {
+  background: linear-gradient(135deg, #ff8c00 0%, #ff5e00 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

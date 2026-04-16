@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-500: #ff8c00;
+  --brand-600: #ea580c;
+  --bg-dark: #050508;
+  --glass: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  @apply bg-[#050508] text-gray-200 antialiased font-outfit;
+}
+
+.stitch-card {
+  @apply bg-white/[0.03] backdrop-blur-[30px] border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.3)];
+}
+
+.stitch-glass {
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.05) 0%, transparent 100%);
+  @apply border border-white/[0.05] backdrop-blur-xl;
+}
+
+.neon-glow {
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+}
+
+/* Animations Stitch */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

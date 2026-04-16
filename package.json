@@ -1,0 +1,19 @@
+{
+  "name": "todjom-gaz-root",
+  "version": "1.0.0",
+  "description": "TODJOM GAZ - Root Management",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install --prefix backend && npm install --prefix admin && npm install --prefix client && npm install --prefix supplier",
+    "backend": "cd backend && npm run dev",
+    "admin": "cd admin && npm run dev",
+    "client": "cd client && npm run dev",
+    "supplier": "cd supplier && npm run dev",
+    "portal": "npx -y serve portal -p 5000",
+    "dev": "concurrently \"npm run backend\" \"npm run admin\" \"npm run client\" \"npm run portal\"",
+    "dev:all": "concurrently \"npm run backend\" \"npm run admin\" \"npm run client\" \"npm run supplier\" \"npm run portal\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

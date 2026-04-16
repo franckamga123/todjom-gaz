@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODJOM | ENROLLMENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --brand: #ff8c00; --bg: #050508; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg); color: white; }
+        
+        .stitch-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .stitch-input {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stitch-input:focus {
+            border-color: var(--brand);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.1);
+        }
+
+        .role-chip {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="radio"]:checked + .role-chip {
+            background: var(--brand);
+            color: black;
+            border-color: var(--brand);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.3);
+        }
+
+        .stitch-button {
+            background: linear-gradient(135deg, #ff8c00 0%, #ff5e00 100%);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen py-10 px-6 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,140,0,0.05)_0%,_transparent_50%)]">
+    
+    <div class="max-w-[700px] mx-auto animate-fade-in">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-black text-white tracking-tight">ENRÔLEMENT <span class="text-orange-500">SYSTEME</span></h1>
+            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-[10px] mt-2">Configuration de votre identité logistique</p>
+        </div>
+
+        <form id="regForm" class="stitch-card p-10 rounded-[4rem] space-y-10">
+            
+            <!-- Section 1: Choix du Rôle -->
+            <div class="space-y-6">
+                <h3 class="text-xs font-black uppercase tracking-widest text-orange-500 ml-2">Étape 01 : Définition du Profil</h3>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="role" value="client" checked class="hidden">
+                        <div class="role-chip p-5 rounded-3xl text-center">
+                            <span class="block font-black text-[10px] uppercase">Client</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="role" value="delivery" class="hidden">
+                        <div class="role-chip p-5 rounded-3xl text-center">
+                            <span class="block font-black text-[10px] uppercase">Livreur</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="role" value="distributor" class="hidden">
+                        <div class="role-chip p-5 rounded-3xl text-center">
+                            <span class="block font-black text-[10px] uppercase">Dépôt</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="role" value="supplier" class="hidden">
+                        <div class="role-chip p-5 rounded-3xl text-center">
+                            <span class="block font-black text-[10px] uppercase">Marque</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Section 2: Identité -->
+            <div class="space-y-6">
+                <h3 class="text-xs font-black uppercase tracking-widest text-orange-500 ml-2">Étape 02 : Données d'identité</h3>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500 ml-2">Nom de famille</label>
+                        <input type="text" id="full_name" required class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500 ml-2">Prénom</label>
+                        <input type="text" id="first_name" required class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500 ml-2">N° de mobile</label>
+                        <input type="tel" id="phone" placeholder="9xxxxxxx" required class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500 ml-2">Quartier (Niamey)</label>
+                        <input type="text" id="neighborhood" required class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[9px] uppercase font-black text-gray-500 ml-2">Mot de passe de sécurité</label>
+                    <input type="password" id="password" required class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                </div>
+            </div>
+
+            <!-- Section 3: Professionnel (Hidden for basic client) -->
+            <div id="profArea" class="hidden space-y-6 pt-10 border-t border-white/5">
+                <h3 class="text-xs font-black uppercase tracking-widest text-orange-500 ml-2">Étape 03 : Dossier Numérique</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500">Avatar / Photo URL</label>
+                        <input type="text" id="photo_url" class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500">ID Card / CNI URL</label>
+                        <input type="text" id="id_card_url" class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                    <div id="licenseBox" class="space-y-2">
+                        <label class="text-[9px] uppercase font-black text-gray-500">Permis de conduire</label>
+                        <input type="text" id="license_number" class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="pt-8 flex flex-col items-center gap-8">
+                <div class="flex items-start gap-4 p-6 bg-white/5 border border-white/5 rounded-3xl">
+                    <input type="checkbox" id="contract" required class="mt-1 accent-orange-500">
+                    <label for="contract" class="text-[10px] leading-relaxed text-gray-500 font-medium">
+                        Je confirme que toutes les données saisies sont authentiques. Je reconnais que le processus de validation de <span class="text-white font-black">TODJOM</span> peut prendre jusqu'à 24h pour les comptes partenaires.
+                    </label>
+                </div>
+                
+                <button type="submit" class="w-full stitch-button py-6 rounded-3xl font-black text-white uppercase tracking-[0.3em] text-sm animate-pulse-slow">
+                    Lancer l'Enrôlement
+                </button>
+                
+                <a href="index.html" class="text-[10px] font-black uppercase tracking-widest text-gray-600 hover:text-white transition-all underline underline-offset-8">Retour au Terminal</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const regForm = document.getElementById('regForm');
+        const roleRadios = document.getElementsByName('role');
+        const profArea = document.getElementById('profArea');
+        const licenseBox = document.getElementById('licenseBox');
+
+        roleRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'client') {
+                    profArea.classList.add('hidden');
+                } else {
+                    profArea.classList.remove('hidden');
+                    licenseBox.style.display = e.target.value === 'delivery' ? 'block' : 'none';
+                }
+            });
+        });
+
+        regForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const data = {
+                role,
+                full_name: document.getElementById('full_name').value,
+                first_name: document.getElementById('first_name').value,
+                phone: document.getElementById('phone').value,
+                neighborhood: document.getElementById('neighborhood').value,
+                password: document.getElementById('password').value,
+                has_accepted_contract: document.getElementById('contract').checked,
+                photo_url: document.getElementById('photo_url').value,
+                id_card_url: document.getElementById('id_card_url').value,
+                license_number: document.getElementById('license_number').value
+            };
+
+            try {
+                const res = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert('Enrôlement transmis ! Validation en cours.');
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Erreur: ' + result.message);
+                }
+            } catch (err) {
+                alert('Incident technique lors de l\'enrôlement');
+            }
+        });
+    </script>
+</body>
+</html>

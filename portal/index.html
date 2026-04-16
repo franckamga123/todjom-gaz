@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODJOM | STITCH PORTAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --brand: #ff8c00; --bg: #050508; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg); color: white; overflow-x: hidden; }
+        
+        .stitch-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .stitch-input {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .stitch-input:focus {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--brand);
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .stitch-button {
+            background: linear-gradient(135deg, #ff8c00 0%, #ff5e00 100%);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stitch-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 140, 0, 0.4);
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.08) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+    
+    <div class="glow-orb top-[-20%] right-[-10%]"></div>
+    <div class="glow-orb bottom-[-20%] left-[-10%]" style="background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);"></div>
+
+    <div class="w-full max-w-[450px] animate-fade-in">
+        <!-- Logo Section -->
+        <div class="flex flex-col items-center mb-12">
+            <div class="w-20 h-20 stitch-card rounded-3xl flex items-center justify-center mb-6 relative group overflow-hidden">
+                <div class="absolute inset-0 bg-brand opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-black tracking-tighter text-white">TODJOM<span class="text-orange-500">.</span></h1>
+            <p class="text-gray-500 font-bold uppercase tracking-[0.4em] text-[10px] mt-2">Logistics Ecosystem</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="stitch-card p-10 rounded-[3rem]">
+            <h2 class="text-2xl font-black mb-8">Connexion</h2>
+            
+            <form id="loginForm" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase font-black text-gray-400 tracking-widest ml-1">Identifiant</label>
+                    <input type="text" id="login" placeholder="Téléphone ou Email" required 
+                        class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase font-black text-gray-400 tracking-widest ml-1">Mot de passe</label>
+                    <input type="password" id="password" placeholder="••••••••" required 
+                        class="w-full stitch-input rounded-2xl p-4 text-white outline-none">
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" id="btnSubmit" class="w-full stitch-button text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm flex items-center justify-center gap-3">
+                        Accéder au Terminal
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-10 pt-8 border-t border-white/5 flex flex-col gap-4 items-center">
+                <a href="register.html" class="text-xs font-bold text-gray-500 hover:text-orange-500 transition-colors">
+                    Pas encore de compte ? <span class="text-white border-b border-orange-500/50 pb-0.5 ml-1">S'enrôler</span>
+                </a>
+                <a href="#" class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 hover:text-white transition-all">Support Technique</a>
+            </div>
+        </div>
+        
+        <p class="text-center mt-8 text-[9px] font-black text-gray-700 uppercase tracking-[0.5em]">Stitch UI Engine v4.0</p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.innerHTML = 'Authentification...';
+            btn.disabled = true;
+
+            const data = {
+                login: document.getElementById('login').value,
+                password: document.getElementById('password').value
+            };
+
+            const host = window.location.hostname;
+            const apiPort = '3000';
+            const apiUrl = `http://${host}:${apiPort}/api/auth/login`;
+
+            try {
+                const res = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                
+                if (result.success) {
+                    const { user, tokens } = result.data;
+                    const token = tokens.accessToken;
+                    const userParam = encodeURIComponent(JSON.stringify(user));
+                    
+                    // Redirection basée sur le rôle
+                    let targetUrl = '';
+                    const protocol = window.location.protocol;
+                    
+                    switch(user.role) {
+                        case 'admin': case 'super_admin': targetUrl = `${protocol}//${host}:5173`; break;
+                        case 'client': targetUrl = `${protocol}//${host}:5100`; break;
+                        case 'delivery': targetUrl = `${protocol}//${host}:5200`; break;
+                        case 'supplier': targetUrl = `${protocol}//${host}:5300`; break;
+                        case 'distributor': targetUrl = `${protocol}//${host}:5400`; break;
+                    }
+                    
+                    if (targetUrl) {
+                        window.location.href = `${targetUrl}?token=${token}&user=${userParam}`;
+                    } else {
+                        alert('Rôle non supporté pour le moment');
+                        btn.disabled = false;
+                        btn.innerHTML = 'Accéder au Terminal';
+                    }
+                } else {
+                    alert('Erreur: ' + result.message);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Accéder au Terminal';
+                }
+            } catch (err) {
+                alert('Erreur serveur: Connexion impossible');
+                btn.disabled = false;
+                btn.innerHTML = 'Accéder au Terminal';
+            }
+        });
+    </script>
+</body>
+</html>

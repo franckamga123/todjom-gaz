@@ -1,0 +1,32 @@
+services:
+  # BACKEND SERVICE (Connecté à la DB PostgreSQL)
+  - type: web
+    name: todjom-gaz-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    rootDir: backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_DIALECT
+        value: postgres
+      - key: DATABASE_URL
+        fromDatabase:
+          name: todjom-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TWILIO_ACCOUNT_SID
+        value: your_real_sid
+      - key: TWILIO_AUTH_TOKEN
+        value: your_real_token
+      - key: PAYMENT_MODE
+        value: production
+
+databases:
+  - name: todjom-db
+    plan: free
+    databaseName: todjom_gaz
+    user: todjom_admin
