@@ -29,8 +29,10 @@ module.exports = {
         underscored: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
-        charset: 'utf8mb4',
-        collate: 'utf8mb4_unicode_ci'
+        ...(process.env.DB_DIALECT !== 'postgres' && {
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci'
+        })
     },
 
     timezone: '+01:00' // WAT (West Africa Time)
