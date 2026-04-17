@@ -6,11 +6,11 @@ require('dotenv').config();
 
 module.exports = {
     host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT) || 3306,
+    port: parseInt(process.env.DB_PORT) || 5432,
     database: process.env.DB_NAME || 'todjom_gaz',
     username: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
-    dialect: process.env.DB_DIALECT || 'mysql',
+    dialect: process.env.DB_DIALECT || 'postgres',
     // Pour Render/Postgres, on peut utiliser DATABASE_URL
     url: process.env.DATABASE_URL || null,
     

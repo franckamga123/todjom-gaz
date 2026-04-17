@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
         order_id: { type: DataTypes.UUID, allowNull: false, unique: true },
         client_id: { type: DataTypes.UUID, allowNull: false },
         distributor_id: { type: DataTypes.UUID, allowNull: false },
-        rating: { type: DataTypes.TINYINT, allowNull: false, validate: { min: 1, max: 5 } },
+        rating: { type: DataTypes.SMALLINT, allowNull: false, validate: { min: 1, max: 5 } },
         comment: { type: DataTypes.TEXT, defaultValue: null }
     }, { tableName: 'reviews', timestamps: true, underscored: true, updatedAt: false });
 };
