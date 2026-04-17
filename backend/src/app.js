@@ -126,11 +126,17 @@ app.use(errorHandler);
 
 const PORT = config.port;
 
-const startServer = async () => {
+// Démarrer le serveur IMMÉDIATEMENT (avant DB) pour que Render le détecte
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Serveur démarré sur le port ${PORT}`);
+    console.log(`🔥 TODJOM GAZ API - ${config.nodeEnv}`);
+});
+
+// Initialiser la base de données EN PARALLÈLE (non-bloquant)
+const initDatabase = async () => {
     try {
-        // Tester la connexion à la base de données
         await db.sequelize.authenticate();
-        console.log('✅ Connexion base de données établie avec succès');
+        console.log('✅ Connexion base de données établie');
 
         // Migration: add 'completed' status to orders enum (PostgreSQL)
         try {
@@ -138,46 +144,27 @@ const startServer = async () => {
                 DO $$ BEGIN
                     ALTER TYPE "enum_orders_status" ADD VALUE IF NOT EXISTS 'completed';
                 EXCEPTION WHEN OTHERS THEN
-                    -- Enum might not exist yet, will be created by sync
                     NULL;
                 END $$;
             `);
-            console.log('✅ Migration: added completed status to orders');
+            console.log('✅ Migration: completed status ajouté');
         } catch (e) {
-            console.log('ℹ️  Migration skipped (will be created by sync):', e.message);
+            console.log('ℹ️  Migration skipped:', e.message);
         }
 
-        // Synchroniser les modèles (Toujours synchroniser au premier lancement en prod pour créer les tables)
+        // Synchroniser les modèles
         if (config.nodeEnv === 'development' || process.env.DB_SYNC === 'true') {
             await db.sequelize.sync({ force: true });
-            console.log('✅ Modèles synchronisés');
+            console.log('✅ Modèles synchronisés (force: true)');
+        } else {
+            await db.sequelize.sync({ alter: true });
+            console.log('✅ Modèles synchronisés (alter: true)');
         }
-
-        // Démarrer le serveur
-        app.listen(PORT, '0.0.0.0', () => {
-            console.log(`
-╔══════════════════════════════════════════════╗
-║                                              ║
-║     🔥 TODJOM GAZ API Server                ║
-║                                              ║
-║     Port:    ${PORT}                            ║
-║     Env:     ${config.nodeEnv.padEnd(26)}║
-║     DB:      ${config.nodeEnv === 'development' ? 'localhost/todjom_gaz' : 'production'}${' '.repeat(Math.max(0, 18 - (config.nodeEnv === 'development' ? 21 : 10)))}║
-║                                              ║
-║     API:     http://localhost:${PORT}/api       ║
-║     Health:  http://localhost:${PORT}/api/health║
-║                                              ║
-╚══════════════════════════════════════════════╝
-            `);
-        });
-
     } catch (error) {
-        console.error('❌ Impossible de démarrer le serveur:', error);
-        process.exit(1);
+        console.error('⚠️  Erreur base de données (serveur quand même actif):', error.message);
     }
 };
 
-startServer();
+initDatabase();
 
 module.exports = app;
-// Redeploy trigger Fri Apr 17 17:12:18 UTC 2026
