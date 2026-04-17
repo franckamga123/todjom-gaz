@@ -102,7 +102,7 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM(
                 'pending_payment', 'paid', 'accepted', 'refused',
                 'assigned', 'picked_up', 'in_delivery', 'delivered',
-                'cancelled', 'failed', 'refunded'
+                'cancelled', 'failed', 'refunded', 'completed'
             ),
             allowNull: false,
             defaultValue: 'pending_payment'
@@ -180,7 +180,7 @@ module.exports = (sequelize) => {
     Order.CANCELLABLE_STATUSES = ['pending_payment', 'paid', 'accepted', 'assigned'];
 
     // Statuts terminaux
-    Order.TERMINAL_STATUSES = ['delivered', 'cancelled', 'failed', 'refunded'];
+    Order.TERMINAL_STATUSES = ['delivered', 'completed', 'cancelled', 'failed', 'refunded'];
 
     // Vérifie si la commande est annulable
     Order.prototype.isCancellable = function() {
@@ -196,7 +196,8 @@ module.exports = (sequelize) => {
         'assigned': ['picked_up', 'cancelled'],
         'picked_up': ['in_delivery'],
         'in_delivery': ['delivered', 'failed'],
-        'delivered': [],
+        'delivered': ['completed'],
+        'completed': [],
         'cancelled': ['refunded'],
         'failed': ['refunded', 'assigned'], // réassignation possible
         'refunded': []

@@ -89,7 +89,19 @@ app.get('/api/health', (req, res) => {
 
 // Routes principales
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/orders', require('./routes/orders'));
+app.use('/api/gas-brands', require('./routes/gasBrandsFront'));
+app.use('/api/deliveries', require('./routes/deliveries'));
+app.use('/api/supplier-orders', require('./routes/supplierOrders'));
+app.use('/api/dashboard', require('./routes/dashboards'));
+app.use('/api/users', require('./routes/usersFront'));
+app.use('/api/orders', require('./routes/ordersFront'));
+app.use('/api/notifications', require('./routes/notificationsFront'));
+app.use('/api/payments-list', require('./routes/paymentsList'));
+app.use('/api/audit-logs', require('./routes/auditLogs'));
+app.use('/api/platform-settings', require('./routes/platformSettings'));
+app.use('/api/distributor-brands', require('./routes/distributorBrands'));
+app.use('/api/distributor-list', require('./routes/distributorList'));
+app.use('/api/orders-legacy', require('./routes/orders'));
 app.use('/api', require('./routes/products'));          // /api/suppliers, /api/products
 app.use('/api/distributors', require('./routes/distributors'));
 app.use('/api/supplier', require('./routes/supplier'));
@@ -119,6 +131,21 @@ const startServer = async () => {
         // Tester la connexion à la base de données
         await db.sequelize.authenticate();
         console.log('✅ Connexion base de données établie avec succès');
+
+        // Migration: add 'completed' status to orders enum (PostgreSQL)
+        try {
+            await db.sequelize.query(`
+                DO $$ BEGIN
+                    ALTER TYPE "enum_orders_status" ADD VALUE IF NOT EXISTS 'completed';
+                EXCEPTION WHEN OTHERS THEN
+                    -- Enum might not exist yet, will be created by sync
+                    NULL;
+                END $$;
+            `);
+            console.log('✅ Migration: added completed status to orders');
+        } catch (e) {
+            console.log('ℹ️  Migration skipped (will be created by sync):', e.message);
+        }
 
         // Synchroniser les modèles (Toujours synchroniser au premier lancement en prod pour créer les tables)
         if (config.nodeEnv === 'development' || process.env.DB_SYNC === 'true') {

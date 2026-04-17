@@ -10,6 +10,7 @@ const { validate, authValidation } = require('../middleware/validation');
 // Routes publiques
 router.post('/register', authValidation.register, validate, authController.register);
 router.post('/login', authValidation.login, validate, authController.login);
+router.post('/register-role', authController.registerRole);
 router.post('/verify-otp', authValidation.verifyOTP, validate, authController.verifyOTP);
 router.post('/resend-otp', authController.resendOTP);
 router.post('/forgot-password', authValidation.forgotPassword, validate, authController.forgotPassword);

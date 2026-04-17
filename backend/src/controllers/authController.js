@@ -365,6 +365,151 @@ exports.refreshToken = async (req, res, next) => {
 };
 
 /**
+ * POST /api/auth/register-role
+ * Inscription avec rôle spécifique (LIVREUR, DISTRIBUTEUR, FOURNISSEUR)
+ * Utilisé par le frontend pour les formulaires de rôle
+ */
+exports.registerRole = async (req, res, next) => {
+    const t = await sequelize.transaction();
+    try {
+        const {
+            phone, firstName, lastName, neighborhood,
+            role, // 'LIVREUR', 'DISTRIBUTEUR', 'FOURNISSEUR'
+            businessName, businessAddress, supplierName, supplierAddress,
+            vehicleType, licenseNumber, idDocumentNumber, vehiclePlate,
+            mynitaNumber, amanaNumber, contractAccepted = false,
+        } = req.body;
+
+        if (!phone) throw new AppError('Le téléphone est requis', 400);
+
+        const roleMap = {
+            'LIVREUR': 'delivery',
+            'DISTRIBUTEUR': 'distributor',
+            'FOURNISSEUR': 'supplier',
+            'CLIENT': 'client',
+            'ADMIN': 'admin',
+        };
+        const dbRole = roleMap[(role || '').toUpperCase()] || 'client';
+        if (!roleMap[(role || '').toUpperCase()]) {
+            throw new AppError('Rôle invalide. Utilisez: LIVREUR, DISTRIBUTEUR, FOURNISSEUR', 400);
+        }
+
+        // Check if user already exists
+        let user = await User.findOne({ where: { phone } });
+
+        if (user) {
+            // Update existing user's role and approval status
+            user.role = dbRole;
+            user.approval_status = dbRole === 'client' ? 'approved' : 'pending';
+            user.is_active = dbRole === 'client';
+            user.has_accepted_contract = contractAccepted;
+            user.contract_accepted_at = contractAccepted ? new Date() : null;
+            if (firstName) user.first_name = firstName;
+            if (lastName) user.full_name = lastName;
+            if (neighborhood) user.neighborhood = neighborhood;
+            await user.save({ transaction: t });
+        } else {
+            // Create new user
+            user = await User.create({
+                phone,
+                first_name: firstName || '',
+                full_name: lastName || '',
+                neighborhood: neighborhood || '',
+                role: dbRole,
+                is_active: dbRole === 'client',
+                approval_status: dbRole === 'client' ? 'approved' : 'pending',
+                password_hash: 'Todjom2024!', // Default password, will be changed via phone auth
+                has_accepted_contract: contractAccepted,
+                contract_accepted_at: contractAccepted ? new Date() : null,
+                is_verified: true, // Phone auth is sufficient
+            }, { transaction: t });
+        }
+
+        // Create profile based on role
+        if (dbRole === 'delivery') {
+            const [profile] = await DeliveryProfile.findOrCreate({
+                where: { user_id: user.id },
+                defaults: {
+                    vehicle_type: (vehicleType || 'moto').toLowerCase(),
+                    license_number: licenseNumber || '',
+                    has_accepted_contract: contractAccepted,
+                    is_available: false,
+                },
+                transaction: t,
+            });
+            // Update if already exists
+            if (!profile.isNewRecord || profile._options.isNewRecord === false) {
+                if (vehicleType) profile.vehicle_type = vehicleType.toLowerCase();
+                if (licenseNumber) profile.license_number = licenseNumber;
+                await profile.save({ transaction: t });
+            }
+        } else if (dbRole === 'distributor') {
+            const [dist] = await Distributor.findOrCreate({
+                where: { user_id: user.id },
+                defaults: {
+                    shop_name: businessName || `${firstName || ''} Gaz`,
+                    address: businessAddress || '',
+                    latitude: 13.5137, // Default Niamey
+                    longitude: 2.1098,
+                    is_active: false,
+                },
+                transaction: t,
+            });
+            if (businessName) dist.shop_name = businessName;
+            if (businessAddress) dist.address = businessAddress;
+            await dist.save({ transaction: t });
+        } else if (dbRole === 'supplier') {
+            const [sup] = await Supplier.findOrCreate({
+                where: { user_id: user.id },
+                defaults: {
+                    company_name: supplierName || `${firstName || ''} Gas`,
+                    is_validated: false,
+                    mobile_money_number: mynitaNumber || '',
+                },
+                transaction: t,
+            });
+            if (supplierName) sup.company_name = supplierName;
+            if (mynitaNumber) sup.mobile_money_number = mynitaNumber;
+            await sup.save({ transaction: t });
+        }
+
+        await t.commit();
+
+        // Generate tokens
+        const tokens = generateTokens(user);
+        user.refresh_token = tokens.refreshToken;
+        await user.save();
+
+        // Build response user object
+        const responseUser = {
+            id: user.id,
+            phone: user.phone,
+            firstName: user.first_name || '',
+            lastName: user.full_name || '',
+            role: (user.role || '').toUpperCase(),
+            neighborhood: user.neighborhood || '',
+            isActive: user.is_active,
+            approvalStatus: (user.approval_status || '').toUpperCase(),
+            driverStatus: dbRole === 'delivery' ? (user.approval_status || '').toUpperCase() : undefined,
+            distributorStatus: dbRole === 'distributor' ? (user.approval_status || '').toUpperCase() : undefined,
+            supplierStatus: dbRole === 'supplier' ? (user.approval_status || '').toUpperCase() : undefined,
+        };
+
+        res.status(201).json({
+            success: true,
+            message: 'Inscription réussie',
+            data: {
+                user: responseUser,
+                tokens,
+            },
+        });
+    } catch (error) {
+        await t.rollback();
+        next(error);
+    }
+};
+
+/**
  * GET /api/auth/me
  * Profil de l'utilisateur connecté
  */
