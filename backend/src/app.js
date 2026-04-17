@@ -122,7 +122,7 @@ const startServer = async () => {
 
         // Synchroniser les modèles (Toujours synchroniser au premier lancement en prod pour créer les tables)
         if (config.nodeEnv === 'development' || process.env.DB_SYNC === 'true') {
-            await db.sequelize.sync({ alter: true });
+            await db.sequelize.sync({ force: true });
             console.log('✅ Modèles synchronisés');
         }
 
