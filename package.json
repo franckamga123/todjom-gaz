@@ -4,6 +4,7 @@
   "description": "TODJOM GAZ - Root Management",
   "private": true,
   "scripts": {
+    "start": "cd backend && node src/app.js",
     "install-all": "npm install --prefix backend && npm install --prefix admin && npm install --prefix client && npm install --prefix supplier",
     "backend": "cd backend && npm run dev",
     "admin": "cd admin && npm run dev",
