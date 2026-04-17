@@ -118,7 +118,7 @@ const startServer = async () => {
     try {
         // Tester la connexion à la base de données
         await db.sequelize.authenticate();
-        console.log('✅ Connexion MySQL établie avec succès');
+        console.log('✅ Connexion base de données établie avec succès');
 
         // Synchroniser les modèles (Toujours synchroniser au premier lancement en prod pour créer les tables)
         if (config.nodeEnv === 'development' || process.env.DB_SYNC === 'true') {

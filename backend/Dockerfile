@@ -7,6 +7,6 @@ RUN npm install --production
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE $PORT
 
-CMD ["node", "src/server.js"]
+CMD ["node", "src/app.js"]
