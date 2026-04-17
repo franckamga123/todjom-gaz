@@ -2,7 +2,7 @@
 // TODJOM GAZ - Application Express Principale
 // ============================================
 
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const express = require('express');
 const cors = require('cors');
@@ -137,20 +137,6 @@ const initDatabase = async () => {
     try {
         await db.sequelize.authenticate();
         console.log('✅ Connexion base de données établie');
-
-        // Migration: add 'completed' status to orders enum (PostgreSQL)
-        try {
-            await db.sequelize.query(`
-                DO $$ BEGIN
-                    ALTER TYPE "enum_orders_status" ADD VALUE IF NOT EXISTS 'completed';
-                EXCEPTION WHEN OTHERS THEN
-                    NULL;
-                END $$;
-            `);
-            console.log('✅ Migration: completed status ajouté');
-        } catch (e) {
-            console.log('ℹ️  Migration skipped:', e.message);
-        }
 
         // Synchroniser les modèles
         if (config.nodeEnv === 'development' || process.env.DB_SYNC === 'true') {

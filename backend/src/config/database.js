@@ -2,7 +2,7 @@
 // TODJOM GAZ - Configuration Base de Données
 // ============================================
 
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
 
 module.exports = {
     host: process.env.DB_HOST || 'localhost',

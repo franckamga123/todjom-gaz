@@ -7,8 +7,11 @@ const dbConfig = require('../config/database');
 
 // Initialisation Sequelize
 let sequelize;
-if (dbConfig.url) {
-    sequelize = new Sequelize(dbConfig.url, {
+const dbUrl = dbConfig.url || '';
+
+if (dbUrl.startsWith('postgres://') || dbUrl.startsWith('postgresql://')) {
+    // Render / PostgreSQL production
+    sequelize = new Sequelize(dbUrl, {
         dialect: 'postgres',
         protocol: 'postgres',
         dialectOptions: {
@@ -22,6 +25,7 @@ if (dbConfig.url) {
         timezone: dbConfig.timezone
     });
 } else {
+    // Fallback: use individual config params (works if DB_HOST etc are set)
     sequelize = new Sequelize(
         dbConfig.database,
         dbConfig.username,
@@ -30,6 +34,7 @@ if (dbConfig.url) {
             host: dbConfig.host,
             port: dbConfig.port,
             dialect: dbConfig.dialect,
+            dialectModule: dbConfig.dialect === 'postgres' ? require('pg') : undefined,
             pool: dbConfig.pool,
             logging: dbConfig.logging,
             define: dbConfig.define,
