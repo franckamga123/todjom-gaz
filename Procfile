@@ -1,1 +1,1 @@
-web: cd backend && npm install --production && node src/app.js
+web: cd backend && node src/app.js
